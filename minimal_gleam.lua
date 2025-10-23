@@ -26,6 +26,10 @@ local colors = {
   operators = "#a8ccf1",
   definitions = "#13b3ec",
   ipairs = "#bec4ff",
+  search_bg = "#ef038f",     -- pink background for search matches
+  search_fg = "#ffffff",     -- white text for search matches
+  substitute_bg = "#57f3c3", -- green background for substitute preview
+  substitute_fg = "#1a1a1a", -- dark text for substitute preview
 }
 
 -- Base groups
@@ -40,6 +44,29 @@ vim.api.nvim_set_hl(0, "Operator", { fg = colors.operators })
 vim.api.nvim_set_hl(0, "Error", { fg = colors.errors })
 vim.api.nvim_set_hl(0, "Warning", { fg = colors.warnings })
 vim.api.nvim_set_hl(0, "Visual", { fg = colors.visual_fg_gleamy, bg = colors.visual_bg })
+
+-- Search and substitute highlighting
+vim.api.nvim_set_hl(0, "Search", {
+  fg = colors.search_fg,
+  bg = colors.search_bg,
+  bold = true
+})
+vim.api.nvim_set_hl(0, "IncSearch", {
+  fg = colors.search_fg,
+  bg = colors.search_bg,
+  bold = true,
+  underline = true
+})
+vim.api.nvim_set_hl(0, "CurSearch", {
+  fg = colors.search_fg,
+  bg = colors.search_bg,
+  bold = true
+})
+vim.api.nvim_set_hl(0, "Substitute", {
+  fg = colors.substitute_fg,
+  bg = colors.substitute_bg,
+  bold = true
+})
 
 -- Unhighlighted groups (inherit normal)
 local unhighlighted = {
