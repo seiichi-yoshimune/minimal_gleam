@@ -1,107 +1,124 @@
 -- Minimal gleam R3adme 2025
--- place config in:
--- ~/.config/nvim/colors/minimal_gleam.lua
--- place in your init.lua
+-- place config in: ~/.config/nvim/colors/minimal_gleam.lua
+-- in your init.lua:
 -- vim.o.termguicolors = true
 -- vim.cmd("colorscheme minimal_gleam")
 
 vim.cmd("hi clear")
-
 if vim.fn.exists("syntax_on") then
   vim.cmd("syntax reset")
 end
-
 vim.g.colors_name = "minimal_gleam"
 
+-- Helper function to make setting highlights cleaner
+local function hl(group, opts)
+  vim.api.nvim_set_hl(0, group, opts)
+end
+
 local colors = {
-  normal = "#f6ecd7",
+  normal = "#ffffff",
+  normal_dim = "#9c9c9c",
   background = "#1a1a1a",
-  ld_bg = "#3a3a3a",
-  visual_bg = "#2c0044",
-  visual_fg_gleamy = "#f5caff",
-  strings = "#57f3c3",
-  errors = "#ef038f",
+  visual_bg = "#3a3a3a",
+  visual_fg = "#FAF0F5",
+  strings = "#cafba7",
+  errors = "#fb309b",
   warnings = "#f7c297",
-  comments = "#ffecb8",
-  operators = "#a8ccf1",
+  comments = "#00ffed", -- "#F68FE7",
+  type = "#cea3ff",
   definitions = "#13b3ec",
-  ipairs = "#bec4ff",
-  search_bg = "#ef038f",     -- pink background for search matches
-  search_fg = "#ffffff",     -- white text for search matches
-  substitute_bg = "#57f3c3", -- green background for substitute preview
-  substitute_fg = "#1a1a1a", -- dark text for substitute preview
+  parameter = "#FFD166",
+  search_bg = "#3a3a3a",
+  search_fg = "#57F3C3",
+  substitute_bg = "#57f3c3",
+  substitute_fg = "#1a1a1a",
+  dark_grey = "#777777",
+  light_pink = "#FEAED0",
 }
 
 -- Base groups
-vim.api.nvim_set_hl(0, "Normal", { fg = colors.normal, bg = colors.background })
-vim.api.nvim_set_hl(0, "Comment", { fg = colors.comments })
-vim.api.nvim_set_hl(0, "String", { fg = colors.strings })
-vim.api.nvim_set_hl(0, "Constant", { fg = colors.strings })
-vim.api.nvim_set_hl(0, "Function", { fg = colors.definitions })
-vim.api.nvim_set_hl(0, "TypeDef", { fg = colors.definitions })
-vim.api.nvim_set_hl(0, "Structure", { fg = colors.definitions })
-vim.api.nvim_set_hl(0, "Operator", { fg = colors.operators })
-vim.api.nvim_set_hl(0, "Error", { fg = colors.errors })
-vim.api.nvim_set_hl(0, "Warning", { fg = colors.warnings })
-vim.api.nvim_set_hl(0, "Visual", { fg = colors.visual_fg_gleamy, bg = colors.visual_bg })
+hl("Normal", { fg = colors.normal, bg = colors.background })
+hl("Comment", { fg = colors.comments })
+hl("String", { fg = colors.strings })
+hl("Constant", { link = "String" })
+hl("Function", { fg = colors.definitions })
+hl("TypeDef", { link = "Function" })
+hl("Structure", { link = "Normal" })
+hl("Operator", { fg = colors.normal_dim })
+hl("Error", { fg = colors.errors })
+hl("Warning", { fg = colors.warnings })
+hl("Visual", { fg = colors.visual_fg, bg = colors.visual_bg })
+hl("Todo", { fg = colors.warnings, bold = true })
+hl("Underlined", { fg = colors.normal, underline = true })
 
 -- Search and substitute highlighting
-vim.api.nvim_set_hl(0, "Search", {
-  fg = colors.search_fg,
-  bg = colors.search_bg,
-  bold = true
-})
-vim.api.nvim_set_hl(0, "IncSearch", {
-  fg = colors.search_fg,
-  bg = colors.search_bg,
-  bold = true,
-  underline = true
-})
-vim.api.nvim_set_hl(0, "CurSearch", {
-  fg = colors.search_fg,
-  bg = colors.search_bg,
-  bold = true
-})
-vim.api.nvim_set_hl(0, "Substitute", {
-  fg = colors.substitute_fg,
-  bg = colors.substitute_bg,
-  bold = true
+hl("Search", { fg = colors.search_fg, bg = colors.search_bg, bold = true })
+hl("IncSearch", { fg = colors.search_fg, bg = colors.search_bg, bold = true, underline = true })
+hl("CurSearch", { link = "IncSearch" })
+hl("Substitute", { fg = colors.substitute_fg, bg = colors.substitute_bg, bold = true })
+
+-- Quickfix specific styling
+hl("QuickFixLine", { fg = colors.substitute_fg, bg = colors.light_pink, bold = true })
+hl("qfNormal", { fg = colors.dark_grey, bg = colors.background })
+hl("qfError", { fg = colors.errors })
+
+
+hl("qfFileName", { link = "qfNormal" })
+hl("qfLineNr", { link = "qfNormal" })
+hl("qfSeparator1", { link = "qfNormal" })
+hl("qfSeparator2", { link = "qfNormal" })
+hl("qfText", { link = "qfNormal" })
+
+
+vim.api.nvim_create_augroup("MinimalGleamQuickFix", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "qf",
+  command = "setlocal winhighlight=Normal:qfNormal",
+  group = "MinimalGleamQuickFix",
 })
 
--- Unhighlighted groups (inherit normal)
-local unhighlighted = {
+-- Minimalist groups (linked to Normal for efficiency)
+
+-- conflicting with your explicit definitions below.
+local minimalist_groups = {
   "Identifier", "Keyword", "Statement", "Conditional", "Repeat",
   "Label", "Exception", "PreProc", "Include", "Define", "Macro",
-  "PreCondit", "Type", "StorageClass", "Typedef", "Special",
-  "SpecialChar", "Tag", "Delimiter", "SpecialComment", "Debug", "Ignore"
+  "PreCondit", "StorageClass", "Special",
+  "SpecialChar", "Tag", "Delimiter", "SpecialComment", "Debug", "Ignore",
 }
 
-for _, group in ipairs(unhighlighted) do
-  vim.api.nvim_set_hl(0, group, { fg = colors.ipairs })
+for _, group in ipairs(minimalist_groups) do
+  hl(group, { link = "Normal" })
 end
 
-vim.api.nvim_set_hl(0, "Todo", { fg = colors.warnings, bold = true })
-vim.api.nvim_set_hl(0, "Underlined", { fg = colors.normal, underline = true })
-
 -- Tree-sitter groups
-vim.api.nvim_set_hl(0, "@function", { link = "Function" })
-vim.api.nvim_set_hl(0, "@function.call", { fg = colors.normal })
-vim.api.nvim_set_hl(0, "@type", { fg = colors.definitions })
-vim.api.nvim_set_hl(0, "@type.definition", { fg = colors.definitions })
-vim.api.nvim_set_hl(0, "@constructor", { fg = colors.normal })
-vim.api.nvim_set_hl(0, "@parameter", { fg = colors.normal })
-vim.api.nvim_set_hl(0, "@variable", { fg = colors.normal })
-vim.api.nvim_set_hl(0, "@property", { fg = colors.normal })
-vim.api.nvim_set_hl(0, "@keyword", { fg = colors.normal })
-vim.api.nvim_set_hl(0, "@string", { link = "String" })
-vim.api.nvim_set_hl(0, "@operator", { link = "Operator" })
-vim.api.nvim_set_hl(0, "@comment", { link = "Comment" })
-vim.api.nvim_set_hl(0, "@constant", { link = "Constant" })
-vim.api.nvim_set_hl(0, "@constant.builtin", { fg = colors.strings })
+hl("@function", { link = "Function" })
+hl("@function.call", { link = "Normal" })
+hl("@variable.parameter", { fg = colors.parameter })
+hl("@punctuation", { fg = colors.normal_dim })
+hl("@punctuation.special", { link = "@punctuation" })
+hl("@type", { fg = colors.type })
+hl("@module", { link = "@type" })
+hl("@constructor", { link = "@type" })
+hl("@variable", { link = "Normal" })
+hl("@property", { link = "Normal" })
+hl("@keyword", { link = "Normal" })
+hl("@string", { link = "String" })
+hl("@operator", { link = "Operator" })
+hl("@comment", { link = "Comment" })
+hl("@spell", { link = "Comment" })
+hl("@constant", { link = "Constant" })
+hl("@constant.builtin", { link = "Constant" })
 
--- LSP
-vim.api.nvim_set_hl(0, "DiagnosticError", { fg = colors.errors })
-vim.api.nvim_set_hl(0, "DiagnosticWarn", { fg = colors.warnings })
-vim.api.nvim_set_hl(0, "LspReferenceText", { bg = colors.ld_bg })
-vim.api.nvim_set_hl(0, "LspReferenceRead", { bg = colors.ld_bg })
-vim.api.nvim_set_hl(0, "LspReferenceWrite", { bg = colors.ld_bg })
+-- LSP Diagnostics
+hl("DiagnosticError", { fg = colors.errors })
+hl("DiagnosticWarn", { fg = colors.warnings })
+hl("DiagnosticInfo", { fg = colors.dark_grey })
+hl("DiagnosticHint", { link = "DiagnosticInfo" })
+
+-- LSP References
+
+hl("LspReferenceText", { link = "Visual" })
+hl("LspReferenceRead", { link = "Visual" })
+hl("LspReferenceWrite", { link = "Visual" })
+
