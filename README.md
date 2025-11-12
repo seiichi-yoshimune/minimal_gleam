@@ -28,5 +28,5 @@ and yes it's gleam lang friendly ;)
 `vim.cmd("colorscheme minimal_gleam")`
 
 
-![Screenshot](screenshot.png)
+![Screenshot](Screenshot.png)
 
