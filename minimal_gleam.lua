@@ -25,6 +25,7 @@ local colors = {
   errors = "#fb309b",
   warnings = "#484848",
   comments = "#e6ae00", -- "#F68FE7", -- "#00ffed",
+  greyed_comments = "#454545",
   type = "#899DC0",
   constructor = "#eddeff",
   definitions = "#66BEEA",
@@ -39,6 +40,7 @@ local colors = {
 
 -- Base groups
 hl("Normal", { fg = colors.normal, bg = colors.background })
+hl("NormalDimmed", { fg = colors.normal_dim })
 hl("Comment", { fg = colors.comments })
 hl("String", { fg = colors.strings })
 hl("Constant", { link = "Normal" })
@@ -97,7 +99,7 @@ hl("@function", { link = "Function" })
 hl("@function.call", { link = "Normal" })
 hl("@variable.parameter", { fg = colors.parameter })
 -- hl("@variable.member", { link = "@variable.parameter" })
-hl("@punctuation", { fg = colors.normal_dim })
+hl("@punctuation", { link = "NormalDimmed" })
 hl("@punctuation.special", { link = "@punctuation" })
 -- hl("@type", { fg = colors.type })
 -- hl("@module", { link = "@type" })
@@ -108,8 +110,9 @@ hl("@property", { link = "Normal" })
 hl("@keyword", { link = "Normal" })
 hl("@string", { link = "String" })
 hl("@operator", { link = "Operator" })
-hl("@comment.gleam", { link = "Normal" })
-hl("@spell", { link = "Comment" })
+hl("@comment.gleam", { fg = colors.greyed_comments })
+hl("@comment.documentation.gleam", { link = "Comment" })
+hl("@comment", { link = "Comment" })
 hl("@constant", { link = "Constant" })
 hl("@constant.builtin", { link = "Constant" })
 
