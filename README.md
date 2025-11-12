@@ -11,7 +11,7 @@
 ```
 minimal, readable easy on your eyes Neovim colorscheme
 
-no plugin, just under 100 lines, <br>
+no plugin, just under 130 lines, <br>
 simple, easy to extend to your like.<br>
 and yes it's gleam lang friendly ;)
 
@@ -26,4 +26,7 @@ and yes it's gleam lang friendly ;)
 `vim.o.termguicolors = true`
 
 `vim.cmd("colorscheme minimal_gleam")`
+
+
+![Screenshot](screenshot.png)
 
